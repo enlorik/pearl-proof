@@ -6,3 +6,4 @@ check -x * 2 = -2 * x
 check (-1) * x = -x
 check -(a + b) * (a - b) = -a^2 + b^2
 check -2^2 = -4
+check (-2)^2 = 4

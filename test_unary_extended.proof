@@ -1,0 +1,11 @@
+check -x * -y = x * y
+check -1 * -1 = 1
+check -(2 * x) = -2 * x
+check -x - y = -(x + y)
+check -x + -y = -(x + y)
+check x - -y = x + y
+check -x^2 = -(x^2)
+check (-x)^2 = x^2
+check -0 = 0
+check -(-(x + y)) = x + y
+check -a * b + a * -b = -2 * a * b
