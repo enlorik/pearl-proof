@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-std::any PearlProofVisitor::visitFile(PearlProofParser::FileContext *ctx) {
+antlrcpp::Any PearlProofASTVisitor::visitFile(PearlProofParser::FileContext *ctx) {
     std::vector<CheckResult> results;
     int lineNum = 1;
     
@@ -18,7 +18,7 @@ std::any PearlProofVisitor::visitFile(PearlProofParser::FileContext *ctx) {
     return results;
 }
 
-std::any PearlProofVisitor::visitLine(PearlProofParser::LineContext *ctx) {
+antlrcpp::Any PearlProofASTVisitor::visitLine(PearlProofParser::LineContext *ctx) {
     // Get the two expressions
     auto exprs = ctx->expr();
     ExprPtr left = std::any_cast<ExprPtr>(visit(exprs[0]));
@@ -40,21 +40,21 @@ std::any PearlProofVisitor::visitLine(PearlProofParser::LineContext *ctx) {
     }
 }
 
-std::any PearlProofVisitor::visitInt(PearlProofParser::IntContext *ctx) {
+antlrcpp::Any PearlProofASTVisitor::visitInt(PearlProofParser::IntContext *ctx) {
     long long value = std::stoll(ctx->INT()->getText());
     return ExprPtr(new IntExpr(value));
 }
 
-std::any PearlProofVisitor::visitVar(PearlProofParser::VarContext *ctx) {
+antlrcpp::Any PearlProofASTVisitor::visitVar(PearlProofParser::VarContext *ctx) {
     std::string name = ctx->ID()->getText();
     return ExprPtr(new VarExpr(name));
 }
 
-std::any PearlProofVisitor::visitParens(PearlProofParser::ParensContext *ctx) {
+antlrcpp::Any PearlProofASTVisitor::visitParens(PearlProofParser::ParensContext *ctx) {
     return visit(ctx->expr());
 }
 
-std::any PearlProofVisitor::visitAddSub(PearlProofParser::AddSubContext *ctx) {
+antlrcpp::Any PearlProofASTVisitor::visitAddSub(PearlProofParser::AddSubContext *ctx) {
     ExprPtr left = std::any_cast<ExprPtr>(visit(ctx->expr(0)));
     ExprPtr right = std::any_cast<ExprPtr>(visit(ctx->expr(1)));
     
@@ -63,7 +63,7 @@ std::any PearlProofVisitor::visitAddSub(PearlProofParser::AddSubContext *ctx) {
     return ExprPtr(new BinOpExpr(op, left, right));
 }
 
-std::any PearlProofVisitor::visitMulDiv(PearlProofParser::MulDivContext *ctx) {
+antlrcpp::Any PearlProofASTVisitor::visitMulDiv(PearlProofParser::MulDivContext *ctx) {
     ExprPtr left = std::any_cast<ExprPtr>(visit(ctx->expr(0)));
     ExprPtr right = std::any_cast<ExprPtr>(visit(ctx->expr(1)));
     
@@ -72,7 +72,7 @@ std::any PearlProofVisitor::visitMulDiv(PearlProofParser::MulDivContext *ctx) {
     return ExprPtr(new BinOpExpr(op, left, right));
 }
 
-std::any PearlProofVisitor::visitPower(PearlProofParser::PowerContext *ctx) {
+antlrcpp::Any PearlProofASTVisitor::visitPower(PearlProofParser::PowerContext *ctx) {
     ExprPtr left = std::any_cast<ExprPtr>(visit(ctx->expr(0)));
     ExprPtr right = std::any_cast<ExprPtr>(visit(ctx->expr(1)));
     

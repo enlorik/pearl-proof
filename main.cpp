@@ -37,11 +37,11 @@ int main(int argc, char* argv[]) {
     }
     
     // Visit the parse tree
-    PearlProofVisitor visitor;
-    auto result = visitor.visitFile(tree);
+    PearlProofASTVisitor visitor;
+    antlrcpp::Any result = visitor.visitFile(tree);
     
     // Get results
-    auto results = std::any_cast<std::vector<CheckResult>>(result);
+    std::vector<CheckResult> results = std::any_cast<std::vector<CheckResult>>(result);
     
     // Output results
     bool allPassed = true;

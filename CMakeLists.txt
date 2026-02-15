@@ -4,13 +4,15 @@ project(PearlProof)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Find ANTLR4 runtime
-find_package(antlr4-runtime REQUIRED)
+# Set ANTLR4 paths
+set(ANTLR4_INCLUDE_DIR /usr/include/antlr4-runtime)
+set(ANTLR4_LIB_DIR /usr/lib/x86_64-linux-gnu)
+set(ANTLR4_JAR ${CMAKE_CURRENT_SOURCE_DIR}/antlr-4.10-complete.jar)
 
-# Generate ANTLR4 parser and lexer
-find_program(ANTLR4_EXECUTABLE antlr4)
-if(NOT ANTLR4_EXECUTABLE)
-    message(FATAL_ERROR "ANTLR4 executable not found. Please install ANTLR4.")
+# Find java
+find_program(JAVA_EXECUTABLE java)
+if(NOT JAVA_EXECUTABLE)
+    message(FATAL_ERROR "Java executable not found. Please install Java.")
 endif()
 
 set(GRAMMAR_FILE ${CMAKE_CURRENT_SOURCE_DIR}/PearlProof.g4)
@@ -24,12 +26,10 @@ add_custom_command(
     OUTPUT ${GENERATED_DIR}/PearlProofLexer.cpp
            ${GENERATED_DIR}/PearlProofParser.cpp
            ${GENERATED_DIR}/PearlProofBaseVisitor.cpp
-           ${GENERATED_DIR}/PearlProofVisitor.cpp
            ${GENERATED_DIR}/PearlProofLexer.h
            ${GENERATED_DIR}/PearlProofParser.h
            ${GENERATED_DIR}/PearlProofBaseVisitor.h
-           ${GENERATED_DIR}/PearlProofVisitor.h
-    COMMAND ${ANTLR4_EXECUTABLE} -Dlanguage=Cpp -visitor -no-listener -o ${GENERATED_DIR} ${GRAMMAR_FILE}
+    COMMAND ${JAVA_EXECUTABLE} -jar ${ANTLR4_JAR} -Dlanguage=Cpp -visitor -no-listener -o ${GENERATED_DIR} ${GRAMMAR_FILE}
     DEPENDS ${GRAMMAR_FILE}
     COMMENT "Generating ANTLR4 parser and lexer"
 )
@@ -49,11 +49,10 @@ set(SOURCES
     ${GENERATED_DIR}/PearlProofLexer.cpp
     ${GENERATED_DIR}/PearlProofParser.cpp
     ${GENERATED_DIR}/PearlProofBaseVisitor.cpp
-    ${GENERATED_DIR}/PearlProofVisitor.cpp
 )
 
 # Create executable
 add_executable(pearlproof ${SOURCES})
 
 # Link ANTLR4 runtime
-target_link_libraries(pearlproof antlr4_static)
+target_link_libraries(pearlproof ${ANTLR4_LIB_DIR}/libantlr4-runtime.a)

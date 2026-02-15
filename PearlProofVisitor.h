@@ -1,5 +1,5 @@
-#ifndef PEARLPROOF_VISITOR_H
-#define PEARLPROOF_VISITOR_H
+#ifndef PEARLPROOF_AST_VISITOR_H
+#define PEARLPROOF_AST_VISITOR_H
 
 #include "PearlProofBaseVisitor.h"
 #include "Expr.h"
@@ -11,16 +11,16 @@ struct CheckResult {
     bool success;
 };
 
-class PearlProofVisitor : public PearlProofBaseVisitor {
+class PearlProofASTVisitor : public PearlProofBaseVisitor {
 public:
-    std::any visitFile(PearlProofParser::FileContext *ctx) override;
-    std::any visitLine(PearlProofParser::LineContext *ctx) override;
-    std::any visitInt(PearlProofParser::IntContext *ctx) override;
-    std::any visitVar(PearlProofParser::VarContext *ctx) override;
-    std::any visitParens(PearlProofParser::ParensContext *ctx) override;
-    std::any visitAddSub(PearlProofParser::AddSubContext *ctx) override;
-    std::any visitMulDiv(PearlProofParser::MulDivContext *ctx) override;
-    std::any visitPower(PearlProofParser::PowerContext *ctx) override;
+    antlrcpp::Any visitFile(PearlProofParser::FileContext *ctx) override;
+    antlrcpp::Any visitLine(PearlProofParser::LineContext *ctx) override;
+    antlrcpp::Any visitInt(PearlProofParser::IntContext *ctx) override;
+    antlrcpp::Any visitVar(PearlProofParser::VarContext *ctx) override;
+    antlrcpp::Any visitParens(PearlProofParser::ParensContext *ctx) override;
+    antlrcpp::Any visitAddSub(PearlProofParser::AddSubContext *ctx) override;
+    antlrcpp::Any visitMulDiv(PearlProofParser::MulDivContext *ctx) override;
+    antlrcpp::Any visitPower(PearlProofParser::PowerContext *ctx) override;
 };
 
-#endif // PEARLPROOF_VISITOR_H
+#endif // PEARLPROOF_AST_VISITOR_H
