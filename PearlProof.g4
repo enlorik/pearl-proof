@@ -4,7 +4,8 @@ file: line+ EOF;
 
 line: 'check' expr '=' expr ;
 
-expr: expr '^' expr           # Power
+expr: <assoc=right> expr '^' expr # Power
+    | '-' expr                # UnaryMinus
     | expr ('*'|'/') expr     # MulDiv
     | expr ('+'|'-') expr     # AddSub
     | '(' expr ')'            # Parens

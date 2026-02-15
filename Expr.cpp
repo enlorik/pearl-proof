@@ -21,6 +21,23 @@ Polynomial VarExpr::toPolynomial() const {
     return result;
 }
 
+// Convert unary operation to polynomial
+Polynomial UnaryExpr::toPolynomial() const {
+    Polynomial operandPoly = operand->toPolynomial();
+    
+    switch (op) {
+        case NEG: {
+            // Negate all coefficients
+            Polynomial result;
+            for (const auto& term : operandPoly) {
+                result[term.first] = -term.second;
+            }
+            return result;
+        }
+    }
+    return Polynomial();
+}
+
 // Convert binary operation to polynomial
 Polynomial BinOpExpr::toPolynomial() const {
     Polynomial leftPoly = left->toPolynomial();
