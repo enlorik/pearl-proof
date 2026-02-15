@@ -54,6 +54,15 @@ Polynomial BinOpExpr::toPolynomial() const {
             return dividePolynomials(leftPoly, rightPoly);
         case POW: {
             // For power, right side must be a constant integer
+            // Special case: if rightPoly is empty, the exponent value is 0
+            if (rightPoly.empty()) {
+                // When exponent is 0: base^0 = 1 (by convention, including 0^0)
+                // Note: 0^0 is mathematically undefined, but is treated as 1 here
+                Polynomial result;
+                Monomial constant;
+                result[constant] = 1;
+                return result;
+            }
             if (rightPoly.size() != 1) {
                 throw std::runtime_error("Exponent must be a constant integer");
             }
@@ -71,6 +80,15 @@ Polynomial BinOpExpr::toPolynomial() const {
     return Polynomial();
 }
 
+// Negate a polynomial
+Polynomial negatePolynomial(const Polynomial& p) {
+    Polynomial result;
+    for (const auto& term : p) {
+        result[term.first] = -term.second;
+    }
+    return result;
+}
+
 // Add two polynomials
 Polynomial addPolynomials(const Polynomial& a, const Polynomial& b) {
     Polynomial result = a;
@@ -83,16 +101,9 @@ Polynomial addPolynomials(const Polynomial& a, const Polynomial& b) {
     return result;
 }
 
-// Subtract two polynomials
+// Subtract two polynomials (implemented as addition of negated polynomial)
 Polynomial subtractPolynomials(const Polynomial& a, const Polynomial& b) {
-    Polynomial result = a;
-    for (const auto& term : b) {
-        result[term.first] -= term.second;
-        if (result[term.first] == 0) {
-            result.erase(term.first);
-        }
-    }
-    return result;
+    return addPolynomials(a, negatePolynomial(b));
 }
 
 // Multiply a monomial by a monomial

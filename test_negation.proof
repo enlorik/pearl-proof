@@ -1,0 +1,11 @@
+check -0 = 0
+check -(x) = -x
+check -(-x) = x
+check -(x + y) = -x - y
+check -(x - y) = -x + y
+check -(2*x + 3*y) = -2*x - 3*y
+check -(a*b) = -a*b
+check -x + x = 0
+check -(x^2 + 2*x + 1) = -x^2 - 2*x - 1
+check -((a + b)^2) = -(a^2 + 2*a*b + b^2)
+check -(x*y*z) = -x*y*z

@@ -62,6 +62,7 @@ public:
 };
 
 // Helper functions for polynomial operations
+Polynomial negatePolynomial(const Polynomial& p);
 Polynomial addPolynomials(const Polynomial& a, const Polynomial& b);
 Polynomial subtractPolynomials(const Polynomial& a, const Polynomial& b);
 Polynomial multiplyPolynomials(const Polynomial& a, const Polynomial& b);
