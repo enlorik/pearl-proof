@@ -58,7 +58,9 @@ antlrcpp::Any PearlProofASTVisitor::visitAddSub(PearlProofParser::AddSubContext 
     ExprPtr left = std::any_cast<ExprPtr>(visit(ctx->expr(0)));
     ExprPtr right = std::any_cast<ExprPtr>(visit(ctx->expr(1)));
     
-    BinOpExpr::Op op = (ctx->children[1]->getText() == "+") ? BinOpExpr::ADD : BinOpExpr::SUB;
+    // Get the operator from the middle token
+    std::string opText = ctx->children[1]->getText();
+    BinOpExpr::Op op = (opText == "+") ? BinOpExpr::ADD : BinOpExpr::SUB;
     
     return ExprPtr(new BinOpExpr(op, left, right));
 }
@@ -67,7 +69,9 @@ antlrcpp::Any PearlProofASTVisitor::visitMulDiv(PearlProofParser::MulDivContext 
     ExprPtr left = std::any_cast<ExprPtr>(visit(ctx->expr(0)));
     ExprPtr right = std::any_cast<ExprPtr>(visit(ctx->expr(1)));
     
-    BinOpExpr::Op op = (ctx->children[1]->getText() == "*") ? BinOpExpr::MUL : BinOpExpr::DIV;
+    // Get the operator from the middle token
+    std::string opText = ctx->children[1]->getText();
+    BinOpExpr::Op op = (opText == "*") ? BinOpExpr::MUL : BinOpExpr::DIV;
     
     return ExprPtr(new BinOpExpr(op, left, right));
 }

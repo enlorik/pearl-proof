@@ -1,0 +1,5 @@
+check 0 = 0
+check x - x = 0
+check (x + y) * (x - y) = x^2 - y^2
+check x * 0 = 0
+check 1 * x = x

@@ -37,10 +37,14 @@ Polynomial BinOpExpr::toPolynomial() const {
             return dividePolynomials(leftPoly, rightPoly);
         case POW: {
             // For power, right side must be a constant integer
-            if (rightPoly.size() != 1 || !rightPoly.begin()->first.empty()) {
+            if (rightPoly.size() != 1) {
                 throw std::runtime_error("Exponent must be a constant integer");
             }
-            int exp = rightPoly.begin()->second;
+            auto term = rightPoly.begin();
+            if (!term->first.empty()) {
+                throw std::runtime_error("Exponent must be a constant integer (not a variable expression)");
+            }
+            int exp = term->second;
             if (exp < 0) {
                 throw std::runtime_error("Negative exponents not supported");
             }
