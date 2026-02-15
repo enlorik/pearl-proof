@@ -54,9 +54,9 @@ Polynomial BinOpExpr::toPolynomial() const {
             return dividePolynomials(leftPoly, rightPoly);
         case POW: {
             // For power, right side must be a constant integer
-            // Special case: if rightPoly is empty, it represents 0
+            // Special case: if rightPoly is empty, the exponent value is 0
             if (rightPoly.empty()) {
-                // x^0 = 1
+                // x^0 = 1 for any x
                 Polynomial result;
                 Monomial constant;
                 result[constant] = 1;
