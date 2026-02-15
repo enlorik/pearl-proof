@@ -56,7 +56,8 @@ Polynomial BinOpExpr::toPolynomial() const {
             // For power, right side must be a constant integer
             // Special case: if rightPoly is empty, the exponent value is 0
             if (rightPoly.empty()) {
-                // When exponent is 0 (empty polynomial), any base^0 = 1
+                // When exponent is 0: base^0 = 1 (by convention, including 0^0)
+                // Note: 0^0 is mathematically undefined, but is treated as 1 here
                 Polynomial result;
                 Monomial constant;
                 result[constant] = 1;
