@@ -1,0 +1,4 @@
+check 1 + 1 = 2
+check x + x = 2 * x
+check x^2 - 1 = (x + 1) * (x - 1)
+check 2 + 2 = 5

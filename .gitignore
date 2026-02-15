@@ -1,0 +1,15 @@
+build/
+*.o
+*.a
+*.so
+*.dylib
+pearlproof
+generated/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.class
+*.jar
+*.interp
+*.tokens
