@@ -38,6 +38,17 @@ public:
     Polynomial toPolynomial() const override;
 };
 
+// Unary operation
+class UnaryExpr : public Expr {
+public:
+    enum Op { NEG };
+    Op op;
+    ExprPtr operand;
+    
+    UnaryExpr(Op o, ExprPtr e) : op(o), operand(e) {}
+    Polynomial toPolynomial() const override;
+};
+
 // Binary operation
 class BinOpExpr : public Expr {
 public:

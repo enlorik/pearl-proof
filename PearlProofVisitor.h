@@ -18,6 +18,7 @@ public:
     antlrcpp::Any visitInt(PearlProofParser::IntContext *ctx) override;
     antlrcpp::Any visitVar(PearlProofParser::VarContext *ctx) override;
     antlrcpp::Any visitParens(PearlProofParser::ParensContext *ctx) override;
+    antlrcpp::Any visitUnaryMinus(PearlProofParser::UnaryMinusContext *ctx) override;
     antlrcpp::Any visitAddSub(PearlProofParser::AddSubContext *ctx) override;
     antlrcpp::Any visitMulDiv(PearlProofParser::MulDivContext *ctx) override;
     antlrcpp::Any visitPower(PearlProofParser::PowerContext *ctx) override;

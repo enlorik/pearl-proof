@@ -54,6 +54,11 @@ antlrcpp::Any PearlProofASTVisitor::visitParens(PearlProofParser::ParensContext 
     return visit(ctx->expr());
 }
 
+antlrcpp::Any PearlProofASTVisitor::visitUnaryMinus(PearlProofParser::UnaryMinusContext *ctx) {
+    ExprPtr operand = std::any_cast<ExprPtr>(visit(ctx->expr()));
+    return ExprPtr(new UnaryExpr(UnaryExpr::NEG, operand));
+}
+
 antlrcpp::Any PearlProofASTVisitor::visitAddSub(PearlProofParser::AddSubContext *ctx) {
     ExprPtr left = std::any_cast<ExprPtr>(visit(ctx->expr(0)));
     ExprPtr right = std::any_cast<ExprPtr>(visit(ctx->expr(1)));
