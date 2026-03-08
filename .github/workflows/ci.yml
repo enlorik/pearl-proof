@@ -27,10 +27,24 @@ jobs:
     - name: List build artifacts
       run: ls -R build
 
-    - name: Run test1.proof
+    - name: Run test1.proof (should pass)
       run: |
+        echo "=== Running test1.proof ==="
         ./build/pearlproof test1.proof
+        echo "=== test1.proof passed ==="
 
-    - name: Run comprehensive_test.proof
+    - name: Run comprehensive_test.proof (should pass)
       run: |
+        echo "=== Running comprehensive_test.proof ==="
         ./build/pearlproof comprehensive_test.proof
+        echo "=== comprehensive_test.proof passed ==="
+
+    - name: Run test_errors.proof (should fail)
+      run: |
+        echo "=== Running test_errors.proof (expected to fail) ==="
+        if ./build/pearlproof test_errors.proof; then
+          echo "FAIL: test_errors.proof should have failed but exited with code 0"
+          exit 1
+        else
+          echo "OK: test_errors.proof failed as expected (exit code $?)"
+        fi
