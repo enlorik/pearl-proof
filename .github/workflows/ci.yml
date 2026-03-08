@@ -24,11 +24,13 @@ jobs:
         cmake ..
         cmake --build .
 
+    - name: List build artifacts
+      run: ls -R build
+
     - name: Run test1.proof
       run: |
-        # Ensure the executable name matches your CMakeLists.txt target (assuming 'pearl-proof' here)
-        ./build/pearl-proof test1.proof
+        ./build/pearlproof test1.proof
 
     - name: Run comprehensive_test.proof
       run: |
-        ./build/pearl-proof comprehensive_test.proof
+        ./build/pearlproof comprehensive_test.proof
