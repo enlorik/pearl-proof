@@ -1,0 +1,8 @@
+.git
+build/
+node_modules/
+server/node_modules/
+*.o
+*.a
+*.so
+*.dylib
