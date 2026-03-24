@@ -8,6 +8,8 @@ RUN apt-get update && apt-get install -y \
     g++ \
     make \
     git \
+    pkg-config \
+    uuid-dev \
     openjdk-17-jre-headless \
     nodejs \
     npm \
