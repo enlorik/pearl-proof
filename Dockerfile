@@ -24,7 +24,8 @@ RUN git clone --depth 1 --branch 4.10 https://github.com/antlr/antlr4.git /tmp/a
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=/usr/lib/x86_64-linux-gnu \
-        -DCMAKE_INSTALL_INCLUDEDIR=/usr/include && \
+        -DCMAKE_INSTALL_INCLUDEDIR=/usr/include \
+        -DPKG_CONFIG_EXECUTABLE=/usr/bin/pkg-config && \
     cmake --build /tmp/antlr4/build --parallel $(nproc) && \
     cmake --install /tmp/antlr4/build && \
     rm -rf /tmp/antlr4
