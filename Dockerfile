@@ -4,16 +4,22 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install build tools and runtime dependencies
 RUN apt-get update && apt-get install -y \
+    ca-certificates \
     cmake \
+    curl \
     g++ \
+    gnupg \
     make \
     git \
     pkg-config \
     uuid-dev \
     openjdk-17-jre-headless \
-    nodejs \
-    npm \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 20 LTS via NodeSource
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
 
 # Build and install ANTLR4 C++ runtime from source (version 4.10)
 # Install headers to /usr/include/antlr4-runtime and lib to /usr/lib/x86_64-linux-gnu
