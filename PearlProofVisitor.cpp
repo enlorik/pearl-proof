@@ -24,16 +24,13 @@ antlrcpp::Any PearlProofASTVisitor::visitLine(PearlProofParser::LineContext *ctx
     ExprPtr left = std::any_cast<ExprPtr>(visit(exprs[0]));
     ExprPtr right = std::any_cast<ExprPtr>(visit(exprs[1]));
     
-    // Convert to polynomials
+    // Convert to rational polynomials and check equality via cross-multiplication:
+    // A/B = C/D  iff  A*D - C*B = 0
     try {
-        Polynomial leftPoly = left->toPolynomial();
-        Polynomial rightPoly = right->toPolynomial();
+        RationalPolynomial leftRat = left->toRationalPolynomial();
+        RationalPolynomial rightRat = right->toRationalPolynomial();
         
-        // Compute difference
-        Polynomial diff = subtractPolynomials(leftPoly, rightPoly);
-        
-        // Check if zero
-        return isZeroPolynomial(diff);
+        return rationalEqual(leftRat, rightRat);
     } catch (const std::exception& e) {
         std::cerr << "Error evaluating expression: " << e.what() << std::endl;
         return false;
