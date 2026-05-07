@@ -272,7 +272,7 @@ RationalPolynomial multiplyRationals(const RationalPolynomial& a, const Rational
 // Divide two rational polynomials: (a/b) / (c/d) = (a*d) / (b*c)
 RationalPolynomial divideRationals(const RationalPolynomial& a, const RationalPolynomial& b) {
     if (isZeroPolynomial(b.num)) {
-        throw std::runtime_error("Division by zero");
+        throw std::runtime_error("Division by zero polynomial: denominator is identically zero for all variable values");
     }
     return {
         multiplyPolynomials(a.num, b.den),

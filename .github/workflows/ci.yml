@@ -64,3 +64,13 @@ jobs:
         else
           echo "OK: test_rational_fail.proof failed as expected (exit code $?)"
         fi
+
+    - name: Run invalid_denominator.proof (should fail)
+      run: |
+        echo "=== Running invalid_denominator.proof (expected to fail with zero-denominator error) ==="
+        if ./build/pearlproof invalid_denominator.proof; then
+          echo "FAIL: invalid_denominator.proof should have failed but exited with code 0"
+          exit 1
+        else
+          echo "OK: invalid_denominator.proof failed as expected (exit code $?)"
+        fi

@@ -75,7 +75,38 @@ The checker works by:
 - Division by integer constants
 - Exponentiation by non-negative integer constants
 
-## Examples
+## Rational Expressions
+
+PearlProof supports rational expressions (fractions of polynomials) such as `x/x`, `(x^2-1)/(x-1)`, or `1/2`.
+
+### Mathematical semantics
+
+Internally, every expression is represented as a **RationalPolynomial** — a pair `(numerator, denominator)` of polynomials. Equality of two rational expressions `A = B` (i.e. `A.num/A.den = B.num/B.den`) is checked by **cross-multiplication**:
+
+```
+A.num * B.den - B.num * A.den  ==  0  (as a polynomial)
+```
+
+This is a **rational-function identity check**: the equation is accepted if and only if both sides are equal as rational functions, i.e. they agree on every point in the domain where all denominators are nonzero.
+
+For example:
+```
+check x/x = 1
+```
+is **accepted** because `x * 1 - 1 * x = 0` as a polynomial, even though the expression is undefined at `x = 0`. The checker treats this as an identity on the domain `x ≠ 0`.
+
+### Division by the zero polynomial
+
+If a denominator simplifies to the **zero polynomial** (identically zero for all variable values), PearlProof detects this and reports a clean error rather than accepting or crashing. Examples of such invalid expressions:
+
+```
+check 1/(x-x) = 1        → ERROR: denominator x-x = 0 for all x
+check (x+1)/(x+1-x-1) = 0  → ERROR: denominator (x+1-x-1) = 0 for all x
+```
+
+These are kept in `invalid_denominator.proof` and are expected to produce error output.
+
+
 
 ### Valid Equations (OK)
 ```
