@@ -48,3 +48,19 @@ jobs:
         else
           echo "OK: test_errors.proof failed as expected (exit code $?)"
         fi
+
+    - name: Run test_rational.proof (should pass)
+      run: |
+        echo "=== Running test_rational.proof ==="
+        ./build/pearlproof test_rational.proof
+        echo "=== test_rational.proof passed ==="
+
+    - name: Run test_rational_fail.proof (should fail)
+      run: |
+        echo "=== Running test_rational_fail.proof (expected to fail) ==="
+        if ./build/pearlproof test_rational_fail.proof; then
+          echo "FAIL: test_rational_fail.proof should have failed but exited with code 0"
+          exit 1
+        else
+          echo "OK: test_rational_fail.proof failed as expected (exit code $?)"
+        fi

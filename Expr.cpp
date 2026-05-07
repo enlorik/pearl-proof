@@ -80,6 +80,68 @@ Polynomial BinOpExpr::toPolynomial() const {
     return Polynomial();
 }
 
+// Convert integer to rational polynomial
+RationalPolynomial IntExpr::toRationalPolynomial() const {
+    return { toPolynomial(), onePolynomial() };
+}
+
+// Convert variable to rational polynomial
+RationalPolynomial VarExpr::toRationalPolynomial() const {
+    return { toPolynomial(), onePolynomial() };
+}
+
+// Convert unary operation to rational polynomial
+RationalPolynomial UnaryExpr::toRationalPolynomial() const {
+    RationalPolynomial rat = operand->toRationalPolynomial();
+    switch (op) {
+        case NEG:
+            return { negatePolynomial(rat.num), rat.den };
+    }
+    return { Polynomial(), onePolynomial() };
+}
+
+// Convert binary operation to rational polynomial
+RationalPolynomial BinOpExpr::toRationalPolynomial() const {
+    RationalPolynomial leftRat = left->toRationalPolynomial();
+    RationalPolynomial rightRat = right->toRationalPolynomial();
+
+    switch (op) {
+        case ADD:
+            return addRationals(leftRat, rightRat);
+        case SUB:
+            return subtractRationals(leftRat, rightRat);
+        case MUL:
+            return multiplyRationals(leftRat, rightRat);
+        case DIV:
+            return divideRationals(leftRat, rightRat);
+        case POW: {
+            // Exponent must be a non-negative integer constant
+            // The right-side rational must have denominator 1 and a constant numerator
+            if (!isZeroPolynomial(subtractPolynomials(rightRat.den, onePolynomial()))) {
+                throw std::runtime_error("Exponent must be a constant integer");
+            }
+            const Polynomial& expPoly = rightRat.num;
+            if (expPoly.empty()) {
+                // Exponent is 0: result is 1
+                return { onePolynomial(), onePolynomial() };
+            }
+            if (expPoly.size() != 1) {
+                throw std::runtime_error("Exponent must be a constant integer");
+            }
+            auto term = expPoly.begin();
+            if (!term->first.empty()) {
+                throw std::runtime_error("Exponent must be a constant integer (not a variable expression)");
+            }
+            int exp = static_cast<int>(term->second);
+            if (exp < 0) {
+                throw std::runtime_error("Negative exponents not supported");
+            }
+            return powerRational(leftRat, exp);
+        }
+    }
+    return { Polynomial(), onePolynomial() };
+}
+
 // Negate a polynomial
 Polynomial negatePolynomial(const Polynomial& p) {
     Polynomial result;
@@ -174,4 +236,63 @@ Polynomial powerPolynomial(const Polynomial& a, int exp) {
 // Check if polynomial is zero
 bool isZeroPolynomial(const Polynomial& p) {
     return p.empty();
+}
+
+// Return the constant polynomial 1
+Polynomial onePolynomial() {
+    Polynomial p;
+    p[Monomial{}] = 1;
+    return p;
+}
+
+// Add two rational polynomials: a/b + c/d = (a*d + c*b) / (b*d)
+RationalPolynomial addRationals(const RationalPolynomial& a, const RationalPolynomial& b) {
+    return {
+        addPolynomials(multiplyPolynomials(a.num, b.den), multiplyPolynomials(b.num, a.den)),
+        multiplyPolynomials(a.den, b.den)
+    };
+}
+
+// Subtract two rational polynomials: a/b - c/d = (a*d - c*b) / (b*d)
+RationalPolynomial subtractRationals(const RationalPolynomial& a, const RationalPolynomial& b) {
+    return {
+        subtractPolynomials(multiplyPolynomials(a.num, b.den), multiplyPolynomials(b.num, a.den)),
+        multiplyPolynomials(a.den, b.den)
+    };
+}
+
+// Multiply two rational polynomials: (a/b) * (c/d) = (a*c) / (b*d)
+RationalPolynomial multiplyRationals(const RationalPolynomial& a, const RationalPolynomial& b) {
+    return {
+        multiplyPolynomials(a.num, b.num),
+        multiplyPolynomials(a.den, b.den)
+    };
+}
+
+// Divide two rational polynomials: (a/b) / (c/d) = (a*d) / (b*c)
+RationalPolynomial divideRationals(const RationalPolynomial& a, const RationalPolynomial& b) {
+    if (isZeroPolynomial(b.num)) {
+        throw std::runtime_error("Division by zero");
+    }
+    return {
+        multiplyPolynomials(a.num, b.den),
+        multiplyPolynomials(a.den, b.num)
+    };
+}
+
+// Raise rational polynomial to a non-negative integer power
+RationalPolynomial powerRational(const RationalPolynomial& a, int exp) {
+    return {
+        powerPolynomial(a.num, exp),
+        powerPolynomial(a.den, exp)
+    };
+}
+
+// Check equality of two rational polynomials: a/b = c/d iff a*d - c*b = 0
+bool rationalEqual(const RationalPolynomial& a, const RationalPolynomial& b) {
+    Polynomial diff = subtractPolynomials(
+        multiplyPolynomials(a.num, b.den),
+        multiplyPolynomials(b.num, a.den)
+    );
+    return isZeroPolynomial(diff);
 }

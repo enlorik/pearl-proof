@@ -15,11 +15,18 @@ using Monomial = std::map<std::string, int>;
 // Polynomial: map of monomial -> coefficient
 using Polynomial = std::map<Monomial, long long>;
 
+// Rational polynomial: numerator and denominator as polynomials
+struct RationalPolynomial {
+    Polynomial num; // numerator
+    Polynomial den; // denominator
+};
+
 // Abstract base class for expressions
 class Expr {
 public:
     virtual ~Expr() = default;
     virtual Polynomial toPolynomial() const = 0;
+    virtual RationalPolynomial toRationalPolynomial() const = 0;
 };
 
 // Integer constant
@@ -28,6 +35,7 @@ public:
     long long value;
     explicit IntExpr(long long v) : value(v) {}
     Polynomial toPolynomial() const override;
+    RationalPolynomial toRationalPolynomial() const override;
 };
 
 // Variable
@@ -36,6 +44,7 @@ public:
     std::string name;
     explicit VarExpr(const std::string& n) : name(n) {}
     Polynomial toPolynomial() const override;
+    RationalPolynomial toRationalPolynomial() const override;
 };
 
 // Unary operation
@@ -47,6 +56,7 @@ public:
     
     UnaryExpr(Op o, ExprPtr e) : op(o), operand(e) {}
     Polynomial toPolynomial() const override;
+    RationalPolynomial toRationalPolynomial() const override;
 };
 
 // Binary operation
@@ -59,6 +69,7 @@ public:
     
     BinOpExpr(Op o, ExprPtr l, ExprPtr r) : op(o), left(l), right(r) {}
     Polynomial toPolynomial() const override;
+    RationalPolynomial toRationalPolynomial() const override;
 };
 
 // Helper functions for polynomial operations
@@ -69,5 +80,14 @@ Polynomial multiplyPolynomials(const Polynomial& a, const Polynomial& b);
 Polynomial dividePolynomials(const Polynomial& a, const Polynomial& b);
 Polynomial powerPolynomial(const Polynomial& a, int exp);
 bool isZeroPolynomial(const Polynomial& p);
+
+// Helper functions for rational polynomial operations
+Polynomial onePolynomial();
+RationalPolynomial addRationals(const RationalPolynomial& a, const RationalPolynomial& b);
+RationalPolynomial subtractRationals(const RationalPolynomial& a, const RationalPolynomial& b);
+RationalPolynomial multiplyRationals(const RationalPolynomial& a, const RationalPolynomial& b);
+RationalPolynomial divideRationals(const RationalPolynomial& a, const RationalPolynomial& b);
+RationalPolynomial powerRational(const RationalPolynomial& a, int exp);
+bool rationalEqual(const RationalPolynomial& a, const RationalPolynomial& b);
 
 #endif // EXPR_H
