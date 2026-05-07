@@ -100,12 +100,11 @@ is **accepted** because `x * 1 - 1 * x = 0` as a polynomial, even though the exp
 If a denominator simplifies to the **zero polynomial** (identically zero for all variable values), PearlProof detects this and reports a clean error rather than accepting or crashing. Examples of such invalid expressions:
 
 ```
-check 1/(x-x) = 1        → ERROR: denominator x-x = 0 for all x
-check (x+1)/(x+1-x-1) = 0  → ERROR: denominator (x+1-x-1) = 0 for all x
+check 1/(x-x) = 1        → ERROR: Division by zero polynomial: denominator is identically zero for all variable values
+check (x+1)/(x+1-x-1) = 0  → ERROR: Division by zero polynomial: denominator is identically zero for all variable values
 ```
 
 These are kept in `invalid_denominator.proof` and are expected to produce error output.
-
 
 
 ### Valid Equations (OK)
