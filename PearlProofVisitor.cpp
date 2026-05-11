@@ -9,9 +9,8 @@ antlrcpp::Any PearlProofASTVisitor::visitFile(PearlProofParser::FileContext *ctx
     
     for (auto lineCtx : ctx->line()) {
         auto result = visit(lineCtx);
-        CheckResult check;
+        CheckResult check = std::any_cast<CheckResult>(result);
         check.lineNum = lineNum++;
-        check.success = std::any_cast<bool>(result);
         results.push_back(check);
     }
     
@@ -21,20 +20,33 @@ antlrcpp::Any PearlProofASTVisitor::visitFile(PearlProofParser::FileContext *ctx
 antlrcpp::Any PearlProofASTVisitor::visitLine(PearlProofParser::LineContext *ctx) {
     // Get the two expressions
     auto exprs = ctx->expr();
-    ExprPtr left = std::any_cast<ExprPtr>(visit(exprs[0]));
-    ExprPtr right = std::any_cast<ExprPtr>(visit(exprs[1]));
-    
-    // Convert to rational polynomials and check equality via cross-multiplication:
-    // A/B = C/D  iff  A*D - C*B = 0
+    CheckResult check;
+    check.lineNum = 0; // will be set by visitFile
+
     try {
+        ExprPtr left = std::any_cast<ExprPtr>(visit(exprs[0]));
+        ExprPtr right = std::any_cast<ExprPtr>(visit(exprs[1]));
+
+        // Convert to rational polynomials and check equality via cross-multiplication:
+        // A/B = C/D  iff  A*D - C*B = 0
         RationalPolynomial leftRat = left->toRationalPolynomial();
         RationalPolynomial rightRat = right->toRationalPolynomial();
-        
-        return rationalEqual(leftRat, rightRat);
+
+        if (rationalEqual(leftRat, rightRat)) {
+            check.status = CheckStatus::OK;
+        } else {
+            check.status = CheckStatus::ERROR;
+            check.message = "equality not proved";
+        }
+    } catch (const UnsupportedOperationError& e) {
+        check.status = CheckStatus::UNSUPPORTED;
+        check.message = e.what();
     } catch (const std::exception& e) {
-        std::cerr << "Error evaluating expression: " << e.what() << std::endl;
-        return false;
+        check.status = CheckStatus::ERROR;
+        check.message = e.what();
     }
+
+    return check;
 }
 
 antlrcpp::Any PearlProofASTVisitor::visitInt(PearlProofParser::IntContext *ctx) {

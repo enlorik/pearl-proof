@@ -4,11 +4,20 @@
 #include "PearlProofBaseVisitor.h"
 #include "Expr.h"
 #include <any>
+#include <string>
+
+// Check status for an equation line
+enum class CheckStatus {
+    OK,          // equality proved by PearlProof
+    ERROR,       // found to be false or contains an invalid expression
+    UNSUPPORTED  // outside the current checker's supported domain
+};
 
 // Structure to hold check results
 struct CheckResult {
     int lineNum;
-    bool success;
+    CheckStatus status;
+    std::string message;
 };
 
 class PearlProofASTVisitor : public PearlProofBaseVisitor {

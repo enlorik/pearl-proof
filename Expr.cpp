@@ -64,15 +64,15 @@ Polynomial BinOpExpr::toPolynomial() const {
                 return result;
             }
             if (rightPoly.size() != 1) {
-                throw std::runtime_error("Exponent must be a constant integer");
+                throw UnsupportedOperationError("Exponent must be a constant integer");
             }
             auto term = rightPoly.begin();
             if (!term->first.empty()) {
-                throw std::runtime_error("Exponent must be a constant integer (not a variable expression)");
+                throw UnsupportedOperationError("Exponent must be a constant integer (not a variable expression)");
             }
             int exp = term->second;
             if (exp < 0) {
-                throw std::runtime_error("Negative exponents not supported");
+                throw UnsupportedOperationError("Negative exponents not supported");
             }
             return powerPolynomial(leftPoly, exp);
         }
@@ -118,7 +118,7 @@ RationalPolynomial BinOpExpr::toRationalPolynomial() const {
             // Exponent must be a non-negative integer constant
             // The right-side rational must have denominator 1 and a constant numerator
             if (!isZeroPolynomial(subtractPolynomials(rightRat.den, onePolynomial()))) {
-                throw std::runtime_error("Exponent must be a constant integer");
+                throw UnsupportedOperationError("Exponent must be a constant integer");
             }
             const Polynomial& expPoly = rightRat.num;
             if (expPoly.empty()) {
@@ -126,15 +126,15 @@ RationalPolynomial BinOpExpr::toRationalPolynomial() const {
                 return { onePolynomial(), onePolynomial() };
             }
             if (expPoly.size() != 1) {
-                throw std::runtime_error("Exponent must be a constant integer");
+                throw UnsupportedOperationError("Exponent must be a constant integer");
             }
             auto term = expPoly.begin();
             if (!term->first.empty()) {
-                throw std::runtime_error("Exponent must be a constant integer (not a variable expression)");
+                throw UnsupportedOperationError("Exponent must be a constant integer (not a variable expression)");
             }
             int exp = static_cast<int>(term->second);
             if (exp < 0) {
-                throw std::runtime_error("Negative exponents not supported");
+                throw UnsupportedOperationError("Negative exponents not supported");
             }
             return powerRational(leftRat, exp);
         }

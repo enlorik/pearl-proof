@@ -46,10 +46,13 @@ int main(int argc, char* argv[]) {
     // Output results
     bool allPassed = true;
     for (const auto& check : results) {
-        if (check.success) {
+        if (check.status == CheckStatus::OK) {
             std::cout << "Line " << check.lineNum << ": OK" << std::endl;
+        } else if (check.status == CheckStatus::UNSUPPORTED) {
+            std::cout << "Line " << check.lineNum << ": UNSUPPORTED: " << check.message << std::endl;
+            allPassed = false;
         } else {
-            std::cout << "Line " << check.lineNum << ": ERROR" << std::endl;
+            std::cout << "Line " << check.lineNum << ": ERROR: " << check.message << std::endl;
             allPassed = false;
         }
     }
