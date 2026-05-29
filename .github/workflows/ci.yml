@@ -43,13 +43,16 @@ jobs:
     - name: Run test_errors.proof (should fail)
       run: |
         echo "=== Running test_errors.proof (expected to fail) ==="
-        if ./build/pearlproof test_errors.proof | tee /tmp/test_errors.out; then
+        set +e
+        ./build/pearlproof test_errors.proof | tee /tmp/test_errors.out
+        status=${PIPESTATUS[0]}
+        set -e
+        if [ "$status" -eq 0 ]; then
           echo "FAIL: test_errors.proof should have failed but exited with code 0"
           exit 1
-        else
-          grep -Eq '^Line [0-9]+: ERROR: ' /tmp/test_errors.out
-          echo "OK: test_errors.proof failed as expected (exit code $?)"
         fi
+        grep -Eq '^Line [0-9]+: ERROR: ' /tmp/test_errors.out
+        echo "OK: test_errors.proof failed as expected (exit code $status)"
 
     - name: Run test_rational.proof (should pass)
       run: |
