@@ -44,9 +44,10 @@ jobs:
       run: |
         echo "=== Running test_errors.proof (expected to fail) ==="
         set +e
-        ./build/pearlproof test_errors.proof | tee /tmp/test_errors.out
-        status=${PIPESTATUS[0]}
+        ./build/pearlproof test_errors.proof > /tmp/test_errors.out
+        status=$?
         set -e
+        cat /tmp/test_errors.out
         if [ "$status" -eq 0 ]; then
           echo "FAIL: test_errors.proof should have failed but exited with code 0"
           exit 1
