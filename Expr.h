@@ -2,9 +2,17 @@
 #define EXPR_H
 
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <map>
 #include <vector>
+
+// Exception for operations outside PearlProof's supported domain
+class UnsupportedOperationError : public std::runtime_error {
+public:
+    explicit UnsupportedOperationError(const std::string& msg)
+        : std::runtime_error(msg) {}
+};
 
 // Forward declarations
 class Expr;
