@@ -58,6 +58,19 @@ Line 2: OK
 Line 3: OK
 ```
 
+### CheckResult status contract
+
+- **OK** = PearlProof proved the claim using its trusted internal checker.
+- **ERROR** = PearlProof checked the claim and found it false, or the expression is invalid.
+- **UNSUPPORTED** = the expression is outside the current supported domain.
+
+Current CLI output format includes status-prefixed lines such as:
+
+```
+Line 1: OK
+Line 2: ERROR: equation is not an identity
+```
+
 ## Implementation Details
 
 The checker works by:
@@ -67,7 +80,7 @@ The checker works by:
    - Monomial: map of variable names to exponents
    - Polynomial: map of monomials to coefficients
 4. **Verification**: Computing poly(A) - poly(B) for each check
-5. **Result**: Reporting OK if result is zero polynomial, ERROR with line number otherwise
+5. **Result**: Reporting a structured check status (`OK`, `ERROR`, or `UNSUPPORTED`) for each input line
 
 ### Supported Operations
 - Addition and subtraction of polynomials

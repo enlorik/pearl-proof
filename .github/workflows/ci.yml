@@ -30,7 +30,8 @@ jobs:
     - name: Run test1.proof (should pass)
       run: |
         echo "=== Running test1.proof ==="
-        ./build/pearlproof test1.proof
+        ./build/pearlproof test1.proof | tee /tmp/test1.out
+        grep -Eq '^Line [0-9]+: OK$' /tmp/test1.out
         echo "=== test1.proof passed ==="
 
     - name: Run comprehensive_test.proof (should pass)
@@ -42,12 +43,17 @@ jobs:
     - name: Run test_errors.proof (should fail)
       run: |
         echo "=== Running test_errors.proof (expected to fail) ==="
-        if ./build/pearlproof test_errors.proof; then
+        set +e
+        ./build/pearlproof test_errors.proof > /tmp/test_errors.out
+        status=$?
+        set -e
+        cat /tmp/test_errors.out
+        if [ "$status" -eq 0 ]; then
           echo "FAIL: test_errors.proof should have failed but exited with code 0"
           exit 1
-        else
-          echo "OK: test_errors.proof failed as expected (exit code $?)"
         fi
+        grep -Eq '^Line [0-9]+: ERROR: ' /tmp/test_errors.out
+        echo "OK: test_errors.proof failed as expected (exit code $status)"
 
     - name: Run test_rational.proof (should pass)
       run: |
