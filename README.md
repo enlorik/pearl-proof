@@ -136,3 +136,15 @@ check x + 1 = x
 check (x + 1)^2 = x^2 + 1
 check 2 + 2 = 5
 ```
+
+## Design notes
+
+**Why ANTLR** — I wanted to write semantics, not a tokeniser. ANTLR takes a declarative grammar and handles operator precedence through rule ordering and associativity annotations (`<assoc=right>` for `^`). The generated visitor gives a typed parse tree; converting that to a separate AST means the rest of the code never touches ANTLR types. That separation makes the polynomial algebra independently testable without involving the parser.
+
+**Why `std::map` for the canonical form** — A sorted map has exactly one representation per polynomial. Adding a term either increments an existing coefficient or inserts a new key; when a coefficient reaches zero, the entry is erased. The result: `x - x` produces a literally empty map. Two polynomials are equal if and only if their maps are equal — structural equality becomes semantic equality, and that's the entire proof mechanism.
+
+**Why cross-multiplication** — To check `A/B = C/D` without polynomial division (which requires a GCD and is considerably messier), you test whether `A·D - C·B = 0`. Polynomial addition and multiplication are closed over integers, so floating point never enters the picture. No epsilon, no rounding error, no false positives.
+
+**Why three result values** — OK, ERROR, and UNSUPPORTED. UNSUPPORTED covers things like variable exponents (`x^y`) that can't be expressed as polynomials. Rather than guess or silently accept out-of-domain input, the checker refuses to make a claim it can't back up. The invariant: if you see OK, a proof actually exists.
+
+**A subtlety worth knowing** — `check x/x = 1` returns OK. Cross-multiplication gives `x·1 - 1·x = 0`, which is true as a polynomial. But the left side is undefined at x=0. The checker's semantics are equality as rational functions — agreement wherever both sides are defined — which is the standard convention in computer algebra systems.
