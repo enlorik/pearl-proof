@@ -143,7 +143,7 @@ check 2 + 2 = 5
 
 **Why `std::map` for the canonical form** — A sorted map has exactly one representation per polynomial. Adding a term either increments an existing coefficient or inserts a new key; when a coefficient reaches zero, the entry is erased. The result: `x - x` produces a literally empty map. Two polynomials are equal if and only if their maps are equal — structural equality becomes semantic equality, and that's the entire proof mechanism.
 
-**Why cross-multiplication** — To check `A/B = C/D` without polynomial division (which requires a GCD and is considerably messier), you test whether `A·D - C·B = 0`. Polynomial addition and multiplication are closed over integers, so floating point never enters the picture. No epsilon, no rounding error, no false positives.
+**Why cross-multiplication** — To check `A/B = C/D` without polynomial division (which requires a GCD and is considerably messier), you test whether `A·D - C·B = 0`. Polynomial addition and multiplication are closed over integers, so floating point never enters the picture. For typical inputs there is no rounding error. One caveat: coefficients are stored as `long long`, so very large constants (beyond roughly 2⁶³) can overflow and produce incorrect results — the implementation details section notes this as a known limit.
 
 **Why three result values** — OK, ERROR, and UNSUPPORTED. UNSUPPORTED covers things like variable exponents (`x^y`) that can't be expressed as polynomials. Rather than guess or silently accept out-of-domain input, the checker refuses to make a claim it can't back up. The invariant: if you see OK, a proof actually exists.
 
