@@ -2,6 +2,8 @@
 
 A C++17 math-checker language built with ANTLR4. PearlProof verifies mathematical equations by converting expressions to canonical polynomial form.
 
+![Image #1](assets/demo.png)
+
 ## Features
 
 - Support for integers, variables, and operators: +, -, *, /, ^
