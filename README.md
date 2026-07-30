@@ -75,6 +75,9 @@ Line 2: ERROR: equation is not an identity
 
 ## Implementation Details
 
+![Architecture diagram — from grammar to proof result](assets/diagram.png)
+
+
 The checker works by:
 1. **Parsing**: Using ANTLR4 grammar to parse input files
 2. **AST Building**: Converting parse tree to Expression AST via visitor pattern
